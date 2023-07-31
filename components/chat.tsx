@@ -26,7 +26,6 @@ const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
   id?: string
-  setLoading: Dispatch<SetStateAction<any>>
 }
 
 export function Chat({ id, initialMessages, className }: ChatProps) {
