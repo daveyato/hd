@@ -16,18 +16,21 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useState } from 'react'
+import { useState, Dispatch, SetStateAction } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { toast } from 'react-hot-toast'
+import Spinner from './ui/Spinner'
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
   id?: string
+  setLoading: Dispatch<SetStateAction<any>>
 }
 
 export function Chat({ id, initialMessages, className }: ChatProps) {
+  const [isUploading, setLoading] = useState<boolean>(false)
   const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
     'ai-token',
     null
@@ -50,6 +53,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     })
   return (
     <>
+      {isUploading ? <Spinner /> : ''}
       <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
         {messages.length ? (
           <>
@@ -69,6 +73,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         messages={messages}
         input={input}
         setInput={setInput}
+        setLoading={setLoading}
       />
 
       <Dialog open={previewTokenDialog} onOpenChange={setPreviewTokenDialog}>
