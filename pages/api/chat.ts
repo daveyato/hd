@@ -1,6 +1,6 @@
+import { API_URL } from '@/utils/constants'
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
-const API_URL = 'http://157.230.120.53:3005'
 
 export default async function handler(
   req: NextApiRequest,

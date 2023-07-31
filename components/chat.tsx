@@ -73,10 +73,11 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     axios
       .post('/api/chat', {
         question: input,
-        history: messages,
+        history: '',
         namespace: namespaceRef.current
       })
       .then(res => {
+        console.log(res)
         setMessages(prevState => [
           ...prevState,
           { content: res.data.text, role: 'assistant' }
