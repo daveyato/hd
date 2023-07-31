@@ -66,10 +66,9 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   //   })
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState<string>('')
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [reload, setReload] = useState<boolean>(true)
   const append = async (msg: Message) => {
-    setIsLoading(false)
     setMessages(prevState => [...prevState, msg])
     axios
       .post('/api/chat', {
@@ -78,12 +77,11 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         namespace: namespaceRef.current
       })
       .then(res => {
-        setIsLoading(false)
         setMessages(prevState => [
           ...prevState,
           { content: res.data.text, role: 'assistant' }
         ])
-        setIsLoading(true)
+        setIsLoading(false)
       })
     setIsLoading(true)
   }

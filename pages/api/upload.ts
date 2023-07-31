@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse, PageConfig } from 'next'
 import axios from 'axios'
 import { generateRandomString } from '@/components/utils'
-
-const API_URL = 'http://157.230.120.53:3005'
+import { API_URL } from '@/utils/constants'
 
 export async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(404).end()
