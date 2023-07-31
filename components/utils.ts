@@ -8,3 +8,8 @@ export const generateRandomString = (length: number) => {
   }
   return result
 }
+
+export type Message = {
+  content: string
+  role: 'system' | 'user' | 'assistant'
+}

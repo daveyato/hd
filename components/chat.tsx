@@ -1,7 +1,5 @@
 'use client'
 
-import { useChat, type Message } from 'ai/react'
-
 import { cn } from '@/lib/utils'
 import { ChatList } from '@/components/chat-list'
 import { ChatPanel } from '@/components/chat-panel'
@@ -16,11 +14,13 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useState, Dispatch, SetStateAction } from 'react'
+import { useState, Dispatch, SetStateAction, useRef, useEffect } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { toast } from 'react-hot-toast'
 import Spinner from './ui/Spinner'
+import { generateRandomString, type Message } from '@/components/utils'
+import axios from 'axios'
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 export interface ChatProps extends React.ComponentProps<'div'> {
@@ -36,20 +36,57 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   )
   const [previewTokenDialog, setPreviewTokenDialog] = useState(IS_PREVIEW)
   const [previewTokenInput, setPreviewTokenInput] = useState(previewToken ?? '')
-  const { messages, append, reload, stop, isLoading, input, setInput } =
-    useChat({
-      initialMessages,
-      id,
-      body: {
-        id,
-        previewToken
-      },
-      onResponse(response) {
-        if (response.status === 401) {
-          toast.error(response.statusText)
-        }
+  const namespaceRef = useRef<any>(null)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const result = localStorage.getItem('namespace')
+      if (result) {
+        console.log('namespace exist : ', result)
+        namespaceRef.current = result
+      } else {
+        const namespace = generateRandomString(10)
+        localStorage.setItem('namespace', namespace)
+        console.log('namespace not exist : ', namespace)
       }
-    })
+    }
+  }, [])
+  // const { messages, append, reload, stop, isLoading, input, setInput } =
+  //   useChat({
+  //     initialMessages,
+  //     id,
+  //     body: {
+  //       id,
+  //       previewToken
+  //     },
+  //     onResponse(response) {
+  //       if (response.status === 401) {
+  //         toast.error(response.statusText)
+  //       }
+  //     }
+  //   })
+  const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [reload, setReload] = useState<boolean>(true)
+  const append = async (msg: Message) => {
+    setIsLoading(false)
+    setMessages(prevState => [...prevState, msg])
+    axios
+      .post('/api/chat', {
+        question: input,
+        history: messages,
+        namespace: namespaceRef.current
+      })
+      .then(res => {
+        setIsLoading(false)
+        setMessages(prevState => [
+          ...prevState,
+          { content: res.data.text, role: 'assistant' }
+        ])
+        setIsLoading(true)
+      })
+    setIsLoading(true)
+  }
   return (
     <>
       {isUploading ? <Spinner /> : ''}

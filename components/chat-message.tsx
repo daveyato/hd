@@ -1,4 +1,4 @@
-import { Message } from 'ai'
+import { type Message } from '@/components/utils'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 

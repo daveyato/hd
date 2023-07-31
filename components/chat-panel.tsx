@@ -6,18 +6,16 @@ import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom'
 import { IconRefresh, IconStop } from '@/components/ui/icons'
 import { FooterText } from '@/components/footer'
 import { useState, Dispatch, SetStateAction } from 'react'
+import { type Message } from '@/components/utils'
 
-export interface ChatPanelProps
-  extends Pick<
-    UseChatHelpers,
-    | 'append'
-    | 'isLoading'
-    | 'reload'
-    | 'messages'
-    | 'stop'
-    | 'input'
-    | 'setInput'
-  > {
+export interface ChatPanelProps {
+  append: any
+  isLoading: boolean
+  reload: any
+  messages: Message[]
+  stop: any
+  input: string
+  setInput: any
   id?: string
   setLoading: Dispatch<SetStateAction<any>>
 }
@@ -64,7 +62,6 @@ export function ChatPanel({
           <PromptForm
             onSubmit={async value => {
               await append({
-                id,
                 content: value,
                 role: 'user'
               })
