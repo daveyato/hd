@@ -181,7 +181,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         }),
         signal: ctrl.signal,
         onmessage: (event) => {
-          console.log(event)
+          console.log("event is : ", event)
           if (event.data === '[DONE]') {
             console.log("done : ")
             setText("")
