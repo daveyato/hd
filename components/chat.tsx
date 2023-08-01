@@ -103,47 +103,54 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     const ctrl = new AbortController()
     setMessages(prevState => [...prevState, msg])
 
-    const sanitizedQuestion = (
-      input + " Explain as much as detail you can."
-    )
+    // const res = await axios.post("/api/chat", {
+    //   question: input,
+    //   history: '',
+    //   namespace: namespaceRef.current
+    // }, {
+    //   responseType : 'stream'
+    // })
+    // console.log(res)
 
-    const docs = await axios.post(`${API_URL}/api/higherai/getDocs`, {
-      question: input,
-      history: '',
-      namespace: namespaceRef.current
-    })
-    console.log("docs is : ", docs)
 
-    let data = ""
-    setMessages((prevState) => {
-      return [...prevState, {
-        content: "",
-        role: "assistant"
-      }]
-    })
 
-    const chain = loadQAChain(new OpenAIChat({
-      openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-      temperature: 0.7,
-      modelName: "gpt-3.5-turbo",
-      verbose: true,
-      streaming: true,
-      callbackManager: CallbackManager.fromHandlers({
-        async handleLLMNewToken(token) {
-          data += token;
-          console.log(token)
-          setText(data)
-        },
-      }),
-    }),)
+    // const sanitizedQuestion = (
+    //   input + " Explain as much as detail you can."
+    // )
+    // const docs = await axios.post(`${API_URL}/api/higherai/getDocs`, {
+    //   question: input,
+    //   history: '',
+    //   namespace: namespaceRef.current
+    // })
+    // console.log("docs is : ", docs)
 
-    const res = await chain.call({
-      input_documents: docs.data,
-      question: sanitizedQuestion,
-    });
-
-    console.log(res)
-    setText("")
+    // let data = ""
+    // setMessages((prevState) => {
+    //   return [...prevState, {
+    //     content: "",
+    //     role: "assistant"
+    //   }]
+    // })
+    // const chain = loadQAChain(new OpenAIChat({
+    //   openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    //   temperature: 0.7,
+    //   modelName: "gpt-3.5-turbo",
+    //   verbose: true,
+    //   streaming: true,
+    //   callbackManager: CallbackManager.fromHandlers({
+    //     async handleLLMNewToken(token) {
+    //       data += token;
+    //       console.log(token)
+    //       setText(data)
+    //     },
+    //   }),
+    // }),)
+    // const res = await chain.call({
+    //   input_documents: docs.data,
+    //   question: sanitizedQuestion,
+    // });
+    // console.log(res)
+    // setText("")
 
     // const resA = await axios
     //   .post('/api/chat', {
@@ -154,31 +161,42 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
 
     // console.log("res A : ", resA)
 
-    // try {
-    //   fetchEventSource(API_URL + '/api/higherai/chat', {
-    //     method: "POST",
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       question: input,
-    //       history: '',
-    //       namespace: namespaceRef.current
-    //     }),
-    //     signal: ctrl.signal,
-    //     onmessage: (event) => {
-    //       if (event.data === '[DONE]') {
-    //         console.log("done : ")
-    //         ctrl.abort();
-    //       } else {
-    //         console.log(event.data)
-    //         // const data = JSON.parse(event.data)
-    //       }
-    //     }
-    //   })
-    // } catch (err) {
-    //   console.log("error is : ", err)
-    // }
+    try {
+      let data = ""
+      setMessages((prevState) => {
+        return [...prevState, {
+          content: "",
+          role: "assistant"
+        }]
+      })
+      fetchEventSource('/api/chat', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: input,
+          history: '',
+          namespace: namespaceRef.current
+        }),
+        // signal: ctrl.signal,
+        onmessage: (event) => {
+          console.log(event)
+          if (event.data === '[DONE]') {
+            console.log("done : ")
+            setText("")
+            // ctrl.abort();
+          } else {
+            console.log(event.data)
+            data += JSON.parse(event.data).data
+            setText(data)
+            // const data = JSON.parse(event.data)
+          }
+        }
+      })
+    } catch (err) {
+      console.log("error is : ", err)
+    }
 
 
 
