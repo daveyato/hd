@@ -20,7 +20,23 @@ import { Input } from './ui/input'
 import { toast } from 'react-hot-toast'
 import Spinner from './ui/Spinner'
 import { generateRandomString, type Message } from '@/components/utils'
+
+import { loadQAChain } from 'langchain/chains'
+import { API_URL } from '@/utils/constants'
 import axios from 'axios'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { pinecone } from "@/utils/pinecone-client.js";
+import { PineconeStore } from "langchain/vectorstores/pinecone";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import {
+  RetrievalQAChain,
+  loadQAStuffChain
+} from "langchain/chains";
+import { OpenAIChat } from "langchain/llms/openai";
+import { CallbackManager } from 'langchain/callbacks';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
+import useHigherAIStore from "@/utils/store"
+
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 export interface ChatProps extends React.ComponentProps<'div'> {
@@ -35,8 +51,12 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     null
   )
   const [previewTokenDialog, setPreviewTokenDialog] = useState(IS_PREVIEW)
+  const [text, setText] = useState<string>("asdfasdfs")
+
+  const [stop, setStop] = useState(false)
   const [previewTokenInput, setPreviewTokenInput] = useState(previewToken ?? '')
   const namespaceRef = useRef<any>(null)
+  const respRef = useRef<string>("")
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const result = localStorage.getItem('namespace')
@@ -50,6 +70,17 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       }
     }
   }, [])
+
+  useEffect(() => {
+    if (text == "")
+      return
+    if (messages.length > 1)
+      setMessages((prevState) => {
+        const newState = [...prevState];
+        newState[newState.length - 1].content = text
+        return newState
+      })
+  }, [text])
   // const { messages, append, reload, stop, isLoading, input, setInput } =
   //   useChat({
   //     initialMessages,
@@ -69,22 +100,139 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [reload, setReload] = useState<boolean>(true)
   const append = async (msg: Message) => {
+    const ctrl = new AbortController()
     setMessages(prevState => [...prevState, msg])
-    axios
-      .post('/api/chat', {
-        question: input,
-        history: '',
-        namespace: namespaceRef.current
-      })
-      .then(res => {
-        console.log(res)
-        setMessages(prevState => [
-          ...prevState,
-          { content: res.data.text, role: 'assistant' }
-        ])
-        setIsLoading(false)
-      })
-    setIsLoading(true)
+
+    const sanitizedQuestion = (
+      input + " Explain as much as detail you can."
+    )
+
+    const docs = await axios.post(`${API_URL}/api/higherai/getDocs`, {
+      question: input,
+      history: '',
+      namespace: namespaceRef.current
+    })
+    console.log("docs is : ", docs)
+
+    let data = ""
+    setMessages((prevState) => {
+      return [...prevState, {
+        content: "",
+        role: "assistant"
+      }]
+    })
+
+    const chain = loadQAChain(new OpenAIChat({
+      openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+      temperature: 0.7,
+      modelName: "gpt-3.5-turbo",
+      verbose: true,
+      streaming: true,
+      callbackManager: CallbackManager.fromHandlers({
+        async handleLLMNewToken(token) {
+          data += token;
+          console.log(token)
+          setText(data)
+        },
+      }),
+    }),)
+
+    const res = await chain.call({
+      input_documents: docs.data,
+      question: sanitizedQuestion,
+    });
+
+    console.log(res)
+    setText("")
+
+    // const resA = await axios
+    //   .post('/api/chat', {
+    //     question: input,
+    //     history: '',
+    //     namespace: namespaceRef.current
+    //   })
+
+    // console.log("res A : ", resA)
+
+    // try {
+    //   fetchEventSource(API_URL + '/api/higherai/chat', {
+    //     method: "POST",
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       question: input,
+    //       history: '',
+    //       namespace: namespaceRef.current
+    //     }),
+    //     signal: ctrl.signal,
+    //     onmessage: (event) => {
+    //       if (event.data === '[DONE]') {
+    //         console.log("done : ")
+    //         ctrl.abort();
+    //       } else {
+    //         console.log(event.data)
+    //         // const data = JSON.parse(event.data)
+    //       }
+    //     }
+    //   })
+    // } catch (err) {
+    //   console.log("error is : ", err)
+    // }
+
+
+
+
+
+    // axios
+    //   .post('/api/chat', {
+    //     question: input,
+    //     history: '',
+    //     namespace: namespaceRef.current
+    //   })
+    //   .then(res => {
+    //     console.log(res)
+    //     setMessages(prevState => [
+    //       ...prevState,
+    //       { content: res.data.text, role: 'assistant' }
+    //     ])
+    //     setIsLoading(false)
+    //   })
+    // setIsLoading(true)
+
+
+    // const response = await fetch(`${API_URL}/api/higherai/chat`, {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     question: input,
+    //     history: '',
+    //     namespace: namespaceRef.current
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Connection: "keep-alive"
+    //   },
+    // });
+    // let clone = response.clone();
+    // if (response.ok) {
+    //   const reader = response.body!.getReader()
+    //   let data = ""
+    //   const textDecoder = new TextDecoder("utf-8")
+    //   while (true) {
+    //     const { done, value } = await reader?.read()
+    //     if (done) break;
+    //     const chunk = textDecoder.decode(value, { stream: !done })
+    //     console.log(chunk)
+    //   }
+    // }
+
+
+    // const stream = response.data
+    // stream.on('data', (data:any) => {
+    //   console.log("data ---------------")
+    //   data = data.toString()
+    //   console.log(data)
+    // })
   }
   return (
     <>
