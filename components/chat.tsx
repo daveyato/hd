@@ -179,13 +179,13 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
           history: '',
           namespace: namespaceRef.current
         }),
-        // signal: ctrl.signal,
+        signal: ctrl.signal,
         onmessage: (event) => {
           console.log(event)
           if (event.data === '[DONE]') {
             console.log("done : ")
             setText("")
-            // ctrl.abort();
+            ctrl.abort();
           } else {
             console.log(event.data)
             data += JSON.parse(event.data).data

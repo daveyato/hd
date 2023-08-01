@@ -32,39 +32,44 @@ export default async function handler(
   })
   console.log("docs is : ", docs)
 
-  let data = ""
-
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache, no-transform',
+    Connection: 'keep-alive',
+  });
 
   const sendData = (data: string) => {
     res.write(`data: ${data}\n\n`);
   };
+  try {
+    const chain = loadQAChain(new OpenAIChat({
+      openAIApiKey: process.env.OPENAI_API_KEY,
+      temperature: 0.7,
+      modelName: "gpt-3.5-turbo",
+      verbose: true,
+      streaming: true,
+      callbackManager: CallbackManager.fromHandlers({
+        async handleLLMNewToken(token) {
+          console.log(token)
+          sendData(JSON.stringify({ data: token }))
+        },
+      }),
+    }),)
 
-  const chain = loadQAChain(new OpenAIChat({
-    openAIApiKey: process.env.OPENAI_API_KEY,
-    temperature: 0.7,
-    modelName: "gpt-3.5-turbo",
-    verbose: true,
-    streaming: true,
-    callbackManager: CallbackManager.fromHandlers({
-      async handleLLMNewToken(token) {
-        data += token;
-        console.log(token)
-        sendData(JSON.stringify({ data: token }))
-      },
-    }),
-  }),)
+    const resp = await chain.call({
+      input_documents: docs.data,
+      question: sanitizedQuestion,
+    });
 
-  const resp = await chain.call({
-    input_documents: docs.data,
-    question: sanitizedQuestion,
-  });
+    console.log(resp)
 
-  console.log(resp)
-  sendData('[DONE]')
+  } catch (err) {
+    console.log(err)
+  } finally {
+    sendData('[DONE]')
+    res.end()
 
+  }
 
   // try {
   //   fetchEventSource(API_URL + '/api/higherai/chat', {
