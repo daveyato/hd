@@ -11,6 +11,7 @@ import { OpenAIChat } from "langchain/llms/openai";
 import { CallbackManager } from 'langchain/callbacks';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import useHigherAIStore from "@/utils/store"
+import { loadQAChain } from 'langchain/chains'
 
 
 export default async function handler(
@@ -18,6 +19,53 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { question, history, namespace } = req.body
+
+
+  const sanitizedQuestion = (
+    question + " Explain as much as detail you can."
+  )
+
+  const docs = await axios.post(`${API_URL}/api/higherai/getDocs`, {
+    question,
+    history,
+    namespace,
+  })
+  console.log("docs is : ", docs)
+
+  let data = ""
+
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+  const sendData = (data: string) => {
+    res.write(`data: ${data}\n\n`);
+  };
+
+  const chain = loadQAChain(new OpenAIChat({
+    openAIApiKey: process.env.OPENAI_API_KEY,
+    temperature: 0.7,
+    modelName: "gpt-3.5-turbo",
+    verbose: true,
+    streaming: true,
+    callbackManager: CallbackManager.fromHandlers({
+      async handleLLMNewToken(token) {
+        data += token;
+        console.log(token)
+        sendData(JSON.stringify({ data: token }))
+      },
+    }),
+  }),)
+
+  const resp = await chain.call({
+    input_documents: docs.data,
+    question: sanitizedQuestion,
+  });
+
+  console.log(resp)
+  sendData('[DONE]')
+
+
   // try {
   //   fetchEventSource(API_URL + '/api/higherai/chat', {
   //     method: "POST",
@@ -84,5 +132,7 @@ export default async function handler(
   // } catch (err) {
   //   console.log("error is ", err)
   // }
+
+
 
 }
