@@ -45,7 +45,7 @@ export default async function handler(
     const chain = loadQAChain(new OpenAIChat({
       openAIApiKey: process.env.OPENAI_API_KEY,
       temperature: 0.7,
-      modelName: "gpt-4",
+      modelName: "gpt-3.5-turbo",
       verbose: true,
       streaming: true,
       callbackManager: CallbackManager.fromHandlers({
