@@ -81,176 +81,57 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         return newState
       })
   }, [text])
-  // const { messages, append, reload, stop, isLoading, input, setInput } =
-  //   useChat({
-  //     initialMessages,
-  //     id,
-  //     body: {
-  //       id,
-  //       previewToken
-  //     },
-  //     onResponse(response) {
-  //       if (response.status === 401) {
-  //         toast.error(response.statusText)
-  //       }
-  //     }
-  //   })
+
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [reload, setReload] = useState<boolean>(true)
+  const reload = async () => {
+    console.log("reload called ---------")
+    const newMsg = messages[messages.length - 2]
+    append(newMsg)
+  }
   const append = async (msg: Message) => {
+    setIsLoading(true)
     const ctrl = new AbortController()
     setMessages(prevState => [...prevState, msg])
+    const sanitizedQuestion = (
+      input + " Explain as much as detail you can."
+    )
+    const docs = await axios.post(`/api/getdocs`, {
+      question: input,
+      history: '',
+      namespace: namespaceRef.current
+    })
+    console.log("docs is : ", docs.data)
 
-    // const res = await axios.post("/api/chat", {
-    //   question: input,
-    //   history: '',
-    //   namespace: namespaceRef.current
-    // }, {
-    //   responseType : 'stream'
-    // })
-    // console.log(res)
-
-
-
-    // const sanitizedQuestion = (
-    //   input + " Explain as much as detail you can."
-    // )
-    // const docs = await axios.post(`${API_URL}/api/higherai/getDocs`, {
-    //   question: input,
-    //   history: '',
-    //   namespace: namespaceRef.current
-    // })
-    // console.log("docs is : ", docs)
-
-    // let data = ""
-    // setMessages((prevState) => {
-    //   return [...prevState, {
-    //     content: "",
-    //     role: "assistant"
-    //   }]
-    // })
-    // const chain = loadQAChain(new OpenAIChat({
-    //   openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-    //   temperature: 0.7,
-    //   modelName: "gpt-3.5-turbo",
-    //   verbose: true,
-    //   streaming: true,
-    //   callbackManager: CallbackManager.fromHandlers({
-    //     async handleLLMNewToken(token) {
-    //       data += token;
-    //       console.log(token)
-    //       setText(data)
-    //     },
-    //   }),
-    // }),)
-    // const res = await chain.call({
-    //   input_documents: docs.data,
-    //   question: sanitizedQuestion,
-    // });
-    // console.log(res)
-    // setText("")
-
-    // const resA = await axios
-    //   .post('/api/chat', {
-    //     question: input,
-    //     history: '',
-    //     namespace: namespaceRef.current
-    //   })
-
-    // console.log("res A : ", resA)
-
-    try {
-      let data = ""
-      setMessages((prevState) => {
-        return [...prevState, {
-          content: "",
-          role: "assistant"
-        }]
-      })
-      fetchEventSource('/api/chat', {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
+    let data = ""
+    setMessages((prevState) => {
+      return [...prevState, {
+        content: "",
+        role: "assistant"
+      }]
+    })
+    const chain = loadQAChain(new OpenAIChat({
+      openAIApiKey: "sk-" + process.env.NEXT_PUBLIC_KEY,
+      temperature: 0.7,
+      modelName: "gpt-3.5-turbo",
+      verbose: true,
+      streaming: true,
+      callbackManager: CallbackManager.fromHandlers({
+        async handleLLMNewToken(token) {
+          data += token;
+          console.log(token)
+          setText(data)
         },
-        body: JSON.stringify({
-          question: input,
-          history: '',
-          namespace: namespaceRef.current
-        }),
-        signal: ctrl.signal,
-        onmessage: (event) => {
-          console.log("event is : ", event)
-          if (event.data === '[DONE]') {
-            console.log("done : ")
-            setText("")
-            ctrl.abort();
-          } else {
-            console.log(event.data)
-            data += JSON.parse(event.data).data
-            setText(data)
-            // const data = JSON.parse(event.data)
-          }
-        }
-      })
-    } catch (err) {
-      console.log("error is : ", err)
-    }
-
-
-
-
-
-    // axios
-    //   .post('/api/chat', {
-    //     question: input,
-    //     history: '',
-    //     namespace: namespaceRef.current
-    //   })
-    //   .then(res => {
-    //     console.log(res)
-    //     setMessages(prevState => [
-    //       ...prevState,
-    //       { content: res.data.text, role: 'assistant' }
-    //     ])
-    //     setIsLoading(false)
-    //   })
-    // setIsLoading(true)
-
-
-    // const response = await fetch(`${API_URL}/api/higherai/chat`, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     question: input,
-    //     history: '',
-    //     namespace: namespaceRef.current
-    //   }),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Connection: "keep-alive"
-    //   },
-    // });
-    // let clone = response.clone();
-    // if (response.ok) {
-    //   const reader = response.body!.getReader()
-    //   let data = ""
-    //   const textDecoder = new TextDecoder("utf-8")
-    //   while (true) {
-    //     const { done, value } = await reader?.read()
-    //     if (done) break;
-    //     const chunk = textDecoder.decode(value, { stream: !done })
-    //     console.log(chunk)
-    //   }
-    // }
-
-
-    // const stream = response.data
-    // stream.on('data', (data:any) => {
-    //   console.log("data ---------------")
-    //   data = data.toString()
-    //   console.log(data)
-    // })
+      }),
+    }),)
+    const res = await chain.call({
+      input_documents: docs.data,
+      question: sanitizedQuestion,
+    });
+    console.log(res)
+    setText("")
+    setIsLoading(false)
   }
   return (
     <>

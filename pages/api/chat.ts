@@ -14,62 +14,75 @@ import useHigherAIStore from "@/utils/store"
 import { loadQAChain } from 'langchain/chains'
 
 
+// export const runtime = 'edge'
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { question, history, namespace } = req.body
 
-
   const sanitizedQuestion = (
     question + " Explain as much as detail you can."
   )
 
-  const docs = await axios.post(`${API_URL}/api/higherai/getDocs`, {
-    question,
-    history,
-    namespace,
+  const body = new FormData();
+  body.append("question", question);
+  body.append("history", history);
+  body.append("namespace", namespace);
+
+  fetch(`${API_URL}/api/higherai/getDocs`, {
+    method: "POST",
+    body
+  }).then((res) => {
+    console.log("res : ", res)
   })
-  console.log("docs is : ", docs)
 
-  res.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache, no-transform',
-    Connection: 'keep-alive',
-  });
+  // const docs = await axios.post(`${API_URL}/api/higherai/getDocs`, {
+  //   question,
+  //   history,
+  //   namespace,
+  // })
+  // console.log("docs is : ", docs)
 
-  const sendData = (data: string) => {
-    res.write(`data: ${data}\n\n`);
-  };
-  try {
-    const chain = loadQAChain(new OpenAIChat({
-      openAIApiKey: process.env.OPENAI_API_KEY,
-      temperature: 0.7,
-      modelName: "gpt-3.5-turbo",
-      verbose: true,
-      streaming: true,
-      callbackManager: CallbackManager.fromHandlers({
-        async handleLLMNewToken(token) {
-          console.log(token)
-          sendData(JSON.stringify({ data: token }))
-        },
-      }),
-    }),)
+  // res.writeHead(200, {
+  //   'Content-Type': 'text/event-stream',
+  //   'Cache-Control': 'no-cache, no-transform',
+  //   Connection: 'keep-alive',
+  // });
 
-    const resp = await chain.call({
-      input_documents: docs.data,
-      question: sanitizedQuestion,
-    });
+  // const sendData = (data: string) => {
+  //   res.write(`data: ${data}\n\n`);
+  // };
+  // try {
+  //   const chain = loadQAChain(new OpenAIChat({
+  //     openAIApiKey: process.env.OPENAI_API_KEY,
+  //     temperature: 0.7,
+  //     modelName: "gpt-3.5-turbo",
+  //     verbose: true,
+  //     streaming: true,
+  //     callbackManager: CallbackManager.fromHandlers({
+  //       async handleLLMNewToken(token) {
+  //         console.log(token)
+  //         sendData(JSON.stringify({ data: token }))
+  //       },
+  //     }),
+  //   }),)
 
-    console.log(resp)
+  //   const resp = await chain.call({
+  //     input_documents: docs.data,
+  //     question: sanitizedQuestion,
+  //   });
 
-  } catch (err) {
-    console.log(err)
-  } finally {
-    sendData('[DONE]')
-    res.end()
+  //   console.log(resp)
 
-  }
+  // } catch (err) {
+  //   console.log(err)
+  // } finally {
+  //   sendData('[DONE]')
+  //   res.end()
+
+  // }
 
   // try {
   //   fetchEventSource(API_URL + '/api/higherai/chat', {
