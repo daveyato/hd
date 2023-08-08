@@ -36,6 +36,7 @@ import { OpenAIChat } from "langchain/llms/openai";
 import { CallbackManager } from 'langchain/callbacks';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import useHigherAIStore from "@/utils/store"
+import { PromptTemplate } from 'langchain/prompts'
 
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
@@ -111,10 +112,11 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         role: "assistant"
       }]
     })
+
     const chain = loadQAChain(new OpenAIChat({
       openAIApiKey: "sk-" + process.env.NEXT_PUBLIC_KEY,
-      temperature: 0.7,
-      modelName: "gpt-3.5-turbo",
+      temperature: 0.3,
+      modelName: "gpt-4",
       verbose: true,
       streaming: true,
       callbackManager: CallbackManager.fromHandlers({
