@@ -90,6 +90,7 @@ export function PromptForm({
                 'File successfully uploaded and stored in Pinecone database ',
                 result
               )
+              alert("Uploading completed")
               setLoading(false)
             } catch (err) {
               setLoading(false)

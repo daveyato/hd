@@ -37,6 +37,7 @@ import { CallbackManager } from 'langchain/callbacks';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import useHigherAIStore from "@/utils/store"
 import { PromptTemplate } from 'langchain/prompts'
+import { QA_PROMPT } from '@/utils/prompt'
 
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
@@ -113,6 +114,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       }]
     })
 
+
     const chain = loadQAChain(new OpenAIChat({
       openAIApiKey: "sk-" + process.env.NEXT_PUBLIC_KEY,
       temperature: 0.3,
@@ -126,7 +128,9 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
           setText(data)
         },
       }),
-    }),)
+    }), {
+      prompt: QA_PROMPT
+    })
     const res = await chain.call({
       input_documents: docs.data,
       question: sanitizedQuestion,
