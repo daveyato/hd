@@ -129,6 +129,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         },
       }),
     }), {
+      type: "stuff",
       prompt: QA_PROMPT
     })
     const res = await chain.call({
