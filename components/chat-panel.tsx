@@ -35,12 +35,13 @@ export function ChatPanel({
     <div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
       <ButtonScrollToBottom />
       <div className="mx-auto sm:max-w-[800px] sm:px-4">
-        <div className="flex h-10 items-center justify-center">
+        <div className="flex h-10 items-center justify-center mb-4">
           {isLoading ? (
             <Button
               variant="outline"
               onClick={() => stop()}
-              className="bg-background"
+              className="bg-background rounded-[40px] text-white"
+              style={{ backgroundColor: "#885EA3" }}
             >
               <IconStop className="mr-2" />
               Stop generating
@@ -50,15 +51,16 @@ export function ChatPanel({
               <Button
                 variant="outline"
                 onClick={() => reload()}
-                className="bg-background"
+                className="bg-background rounded-[40px] text-white"
+                style={{ backgroundColor: "#885EA3" }}
               >
                 <IconRefresh className="mr-2" />
-                Regenerate response
+                Regenerate
               </Button>
             )
           )}
         </div>
-        <div className="space-y-4 border-t bg-background px-6 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
+        <div className="space-y-4 border-t bg-background px-6 py-2 shadow-lg rounded-t-xl sm:border md:py-4">
           <PromptForm
             onSubmit={async value => {
               await append({
