@@ -7,12 +7,15 @@ import axios from 'axios'
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { cn } from '@/lib/utils'
 import { Button, buttonVariants } from '@/components/ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from '@/components/ui/tooltip'
+// import {
+//   Tooltip,
+//   TooltipContent,
+//   TooltipTrigger
+// } from '@/components/ui/tooltip'
+import * as Tooltip from '@radix-ui/react-tooltip'
 import { IconArrowElbow, IconPlus } from '@/components/ui/icons'
+
+// import { Tooltip } from '@chakra-ui/react'
 
 import { getDocument, GlobalWorkerOptions, PDFDocumentProxy } from 'pdfjs-dist'
 import { generateRandomString } from './utils'
@@ -115,29 +118,39 @@ export function PromptForm({
       }}
       ref={formRef}
     >
-      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
+      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-[40px] sm:border sm:px-12">
         <input
           style={{ display: 'none' }}
           ref={inputRef}
           type="file"
           onChange={onFileChange}
         />
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href="#"
-              className={cn(
-                buttonVariants({ size: 'sm', variant: 'outline' }),
-                'absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4'
-              )}
-              onClick={onUpload}
-            >
-              <IconPlus />
-              <span className="sr-only">Upload PDF file</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>Upload PDF file</TooltipContent>
-        </Tooltip>
+        <Tooltip.Provider>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              <Link
+                href="#"
+                className={cn(
+                  buttonVariants({ size: 'sm', variant: 'outline' }),
+                  'absolute left-0 top-4 h-8 w-8 p-0 sm:left-4 border-none shadow-none'
+                )}
+                onClick={onUpload}
+              >
+                <IconPlus />
+                <span className="sr-only">Upload PDF file</span>
+              </Link>
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content className="TooltipContent" sideOffset={5}>
+                Upload 1-4 PDF files
+                <Tooltip.Arrow className="TooltipArrow" />
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
+
+
+
         <Textarea
           ref={inputReactRef}
           tabIndex={0}
@@ -149,20 +162,21 @@ export function PromptForm({
           spellCheck={false}
           className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
         />
-        <div className="absolute right-0 top-4 sm:right-4">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="submit"
-                size="icon"
-                disabled={isLoading || input === ''}
-              >
-                <IconArrowElbow />
-                <span className="sr-only">Send message</span>
-              </Button>
-            </TooltipTrigger>
+        <div className="absolute right-0 top-4 sm:right-4 ">
+          {/* <Tooltip>
+            <TooltipTrigger asChild> */}
+          <Button
+            className='bg-white shadow-none'
+            type="submit"
+            size="icon"
+            disabled={isLoading || input === ''}
+          >
+            <IconArrowElbow />
+            <span className="sr-only">Send message</span>
+          </Button>
+          {/* </TooltipTrigger>
             <TooltipContent>Send message</TooltipContent>
-          </Tooltip>
+          </Tooltip> */}
         </div>
       </div>
     </form>

@@ -5,19 +5,18 @@ import { ExternalLink } from '@/components/external-link'
 
 export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
   return (
-    <p
-      className={cn(
-        'px-2 text-center text-xs leading-normal text-muted-foreground',
-        className
-      )}
-      {...props}
-    >
-      HigerAI chatbot built with{' '}
-      <ExternalLink href="https://nextjs.org">Next.js</ExternalLink> and{' '}
-      <ExternalLink href="https://vercel.com/storage/kv">
-        Vercel KV
-      </ExternalLink>
-      .
-    </p>
+    <div>
+      <h3 className="mb-2 font-semibold">Discover More with Gene Keys</h3>
+      <p
+        className={cn(
+          'text-left text-xs leading-normal text-muted-foreground',
+          className
+        )}
+        {...props}
+      >
+        Interested in exploring your unique genetic code? The Gene Keys & their courses offer an in-depth look into your personal traits, potentials, and life's purpose. <span style={{ color: "#885EA3" }}>Create a free profile and start your journey of self-discovery.</span>
+      </p>
+
+    </div>
   )
 }

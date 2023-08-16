@@ -10,8 +10,3 @@ export const QA_PROMPT = PromptTemplate.fromTemplate(
         
             Answer in Markdown:`
 )
-
-// export const QA_PROMPT = new PromptTemplate({
-//   inputVariables: ['context', 'question'],
-//   template: prompt_template
-// })
