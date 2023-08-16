@@ -120,13 +120,17 @@ export function PromptForm({
         <Tooltip.Provider>
           <Tooltip.Root>
             <Tooltip.Trigger asChild>
-              <button
-                className='absolute left-0 top-4 h-8 w-8 p-0 left-4 border-none shadow-none'
+              <Link
+                href="#"
+                className={cn(
+                  buttonVariants({ size: 'sm', variant: 'outline' }),
+                  'absolute top-4 h-8 w-8 p-0 left-4 border-none shadow-none'
+                )}
                 onClick={onUpload}
               >
                 <IconPlus />
                 <span className="sr-only">Upload PDF file</span>
-              </button>
+              </Link>
             </Tooltip.Trigger>
             <Tooltip.Portal>
               <Tooltip.Content className="TooltipContent" sideOffset={5}>
