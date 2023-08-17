@@ -10,7 +10,7 @@ import {
 import { OpenAIChat } from "langchain/llms/openai";
 import { CallbackManager } from 'langchain/callbacks';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import useHigherAIStore from "@/utils/store"
+
 import { loadQAChain } from 'langchain/chains'
 
 
