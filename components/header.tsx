@@ -35,7 +35,7 @@ export async function Header() {
           alt="Logo"
         />
       </div>
-      <div className="flex items-center justify-start px-4 space-x-2 bg-blue-500 lg:w-[800px]  bg-[#EEEFEF] rounded-[8px]">
+      <div className="flex items-center justify-start px-4 space-x-2 lg:w-[800px]  bg-[#EEEFEF] rounded-[8px]">
         <Image
           className="w-[24px] h-[24px] "
           src={info}
