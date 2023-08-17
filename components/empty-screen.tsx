@@ -79,45 +79,40 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
               Prompt Example
             </div>
             <div className='rounded-[4px] border-solid border-[1px] border-[#D4DADE] p-[8px] font-sm text-sm mb-2'>
-              <div className='flex items-center justify-space-between w-full '>
+              <div className='flex items-center justify-between w-full '>
                 <div className='mr-2'> What Insights Do My Traits Unlock About My True Self?</div>
-                <div>
-                  <Image
-                    className="w-[28px] h-[28px] mr-2 "
-                    src={gotoimg}
-                    alt="info"
-                  />
-                </div>
+
+                <Image
+                  className="w-[28px] h-[28px] mr-2 "
+                  src={gotoimg}
+                  alt="info"
+                />
               </div>
               <div className='text-muted-foreground '>
                 Explore your innate strengths, alignment with life's path, challenges, and personal growth guidance
               </div>
             </div>
             <div className='rounded-[4px] border-solid border-[1px] border-[#D4DADE] p-[8px] font-sm text-sm mb-2'>
-              <div className='flex items-center justify-space-between w-full '>
+              <div className='flex items-center justify-between w-full '>
                 <div className='mr-2'> How Can I Navigate Towards Greater Clarity and Purpose in My Life?</div>
-                <div>
-                  <Image
-                    className="w-[28px] h-[28px] mr-2 "
-                    src={gotoimg}
-                    alt="info"
-                  />
-                </div>
+                <Image
+                  className="w-[28px] h-[28px] mr-2 "
+                  src={gotoimg}
+                  alt="info"
+                />
               </div>
               <div className='text-muted-foreground '>
                 Discover steps to align with your core values, identify your true calling, deepen your inner connection, and cultivate a purposeful life
               </div>
             </div><div className='rounded-[4px] border-solid border-[1px] border-[#D4DADE] p-[8px] font-sm text-sm mb-2'>
-              <div className='flex items-center justify-space-between w-full '>
+              <div className='flex items-center justify-between w-full '>
                 <div className='mr-2'> What Insights Can Our Profiles Offer to Enhance Our Relationship or Business
                   Partnership?</div>
-                <div>
-                  <Image
-                    className="w-[28px] h-[28px] mr-2 "
-                    src={gotoimg}
-                    alt="info"
-                  />
-                </div>
+                <Image
+                  className="w-[28px] h-[28px] mr-2 "
+                  src={gotoimg}
+                  alt="info"
+                />
               </div>
               <div className='text-muted-foreground '>
                 Learn about complementary traits, potential challenges, shared goals alignment, and fostering understanding and trust
