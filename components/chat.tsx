@@ -38,6 +38,7 @@ import { fetchEventSource } from '@microsoft/fetch-event-source';
 import useHigherAIStore from "@/utils/store"
 import { PromptTemplate } from 'langchain/prompts'
 import { QA_PROMPT } from '@/utils/prompt'
+import { Header } from './header'
 
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
@@ -142,6 +143,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   }
   return (
     <>
+      <Header />
       {isUploading ? <Spinner /> : ''}
       <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
         {messages.length ? (

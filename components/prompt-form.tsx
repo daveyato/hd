@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Textarea from 'react-textarea-autosize'
 import { UseChatHelpers } from 'ai/react'
 import axios from 'axios'
-
+import useHigherAIStore from "../store"
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { cn } from '@/lib/utils'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -28,6 +28,7 @@ export function PromptForm({
   isLoading,
   setLoading
 }: PromptProps) {
+  const { PDFList, setPDFList } = useHigherAIStore()
   const inputRef = React.useRef<any>(null)
   const namespaceRef = React.useRef<any>(null)
   const { formRef, onKeyDown } = useEnterSubmit()
@@ -62,6 +63,8 @@ export function PromptForm({
     console.log('onFileChange called ----------')
     if (event.target.files?.length) {
       setLoading(true)
+
+
       const reader = new FileReader()
       reader.onload = (ev: ProgressEvent<FileReader>) => {
         getDocument(ev.target?.result as ArrayBuffer).promise.then(pdf => {
@@ -77,14 +80,20 @@ export function PromptForm({
           Promise.all(promises).then(async pages => {
             try {
               console.log(pages.join('\n'))
-              const result = await axios.post('/api/upload', {
-                text: pages.join('\n'),
-                namespace: namespaceRef.current
-              })
-              console.log(
-                'File successfully uploaded and stored in Pinecone database ',
-                result
-              )
+              console.log(PDFList)
+              const newlist: any = [...PDFList]
+              if (event.target.files?.length)
+                newlist.push({ name: event.target.files[0].name, content: pages.join('\n') })
+              setPDFList(newlist)
+
+              // const result = await axios.post('/api/upload', {
+              //   text: pages.join('\n'),
+              //   namespace: namespaceRef.current
+              // })
+              // console.log(
+              //   'File successfully uploaded and stored in Pinecone database ',
+              //   result
+              // )
               alert("Uploading completed")
               setLoading(false)
             } catch (err) {

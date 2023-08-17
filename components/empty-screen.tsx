@@ -34,7 +34,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
         <p className="mb-2 leading-normal text-muted-foreground text-lg">
           Introducing the Gene Keys AI Owl—your intuitive guide to self-exploration, relationships, and life&apos;s purpose. Dive into personal insights, discover compatibility with others, or simply unlock the mysteries of your unique genetic code. With the Gene Keys AI Owl, understanding yourself and forging meaningful connections has never been more enlightening. Embark on a journey of discovery in just a few simple steps.
         </p>
-        <div className='md:grid gap-[40px] items-start md:grid-cols-2  mb-2'>
+        <div className='lg:grid gap-[40px] items-start lg:grid-cols-2  mb-2'>
           <div className='rounded-[8px] bg-[#F5F5F7] py-[14px] px-[24px] h-full mb-2'>
             <div className='flex items-center justify-start text-lg font-bold mb-2'>
               <Image
@@ -81,9 +81,8 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
             <div className='rounded-[4px] border-solid border-[1px] border-[#D4DADE] p-[8px] font-sm text-sm mb-2'>
               <div className='flex items-center justify-between w-full '>
                 <div className='mr-2'> What Insights Do My Traits Unlock About My True Self?</div>
-
                 <Image
-                  className="w-[28px] h-[28px] mr-2 "
+                  className="w-[28px] h-[28px] mr-2 cursor-pointer "
                   src={gotoimg}
                   alt="info"
                 />
@@ -96,7 +95,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
               <div className='flex items-center justify-between w-full '>
                 <div className='mr-2'> How Can I Navigate Towards Greater Clarity and Purpose in My Life?</div>
                 <Image
-                  className="w-[28px] h-[28px] mr-2 "
+                  className="w-[28px] h-[28px] mr-2 cursor-pointer"
                   src={gotoimg}
                   alt="info"
                 />
@@ -109,7 +108,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
                 <div className='mr-2'> What Insights Can Our Profiles Offer to Enhance Our Relationship or Business
                   Partnership?</div>
                 <Image
-                  className="w-[28px] h-[28px] mr-2 "
+                  className="w-[28px] h-[28px] mr-2 cursor-pointer"
                   src={gotoimg}
                   alt="info"
                 />
