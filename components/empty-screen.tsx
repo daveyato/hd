@@ -32,7 +32,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
           Welcome to The Gene Keys AI Owl
         </h1>
         <p className="mb-2 leading-normal text-muted-foreground text-lg">
-          Introducing the Gene Keys AI Owl—your intuitive guide to self-exploration, relationships, and life's purpose. Dive into personal insights, discover compatibility with others, or simply unlock the mysteries of your unique genetic code. With the Gene Keys AI Owl, understanding yourself and forging meaningful connections has never been more enlightening. Embark on a journey of discovery in just a few simple steps.
+          Introducing the Gene Keys AI Owl—your intuitive guide to self-exploration, relationships, and life&apos;s purpose. Dive into personal insights, discover compatibility with others, or simply unlock the mysteries of your unique genetic code. With the Gene Keys AI Owl, understanding yourself and forging meaningful connections has never been more enlightening. Embark on a journey of discovery in just a few simple steps.
         </p>
         <div className='md:grid gap-[40px] items-start md:grid-cols-2  mb-2'>
           <div className='rounded-[8px] bg-[#F5F5F7] py-[14px] px-[24px] h-full mb-2'>
@@ -57,7 +57,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
                 —
               </div>
               <div>
-                <span className='text-black'>Ask a Question:</span> Feel free to ask anything about the profiles you've uploaded.
+                <span className='text-black'>Ask a Question:</span> Feel free to ask anything about the profiles you&apos;ve uploaded.
               </div>
             </div>
             <div className='flex items-start justify-start text-muted-foreground text-sm mb-2'>
@@ -89,7 +89,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
                 />
               </div>
               <div className='text-muted-foreground '>
-                Explore your innate strengths, alignment with life's path, challenges, and personal growth guidance
+                Explore your innate strengths, alignment with life&apos;s path, challenges, and personal growth guidance
               </div>
             </div>
             <div className='rounded-[4px] border-solid border-[1px] border-[#D4DADE] p-[8px] font-sm text-sm mb-2'>
@@ -121,7 +121,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
           </div>
         </div>
         <div className="mb-2 leading-normal text-muted-foreground text-lg">
-          Whether you're on a quest for self-discovery or seeking to understand your connections with others, the Gene Keys AI Owl is here to illuminate your path. Upload your profiles and embark on your journey today!
+          Whether you&apos;re on a quest for self-discovery or seeking to understand your connections with others, the Gene Keys AI Owl is here to illuminate your path. Upload your profiles and embark on your journey today!
         </div>
       </div >
     </div >
