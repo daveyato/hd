@@ -102,23 +102,18 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     const sanitizedQuestion = (
       input + " Explain as much as detail you can."
     )
-    // const docs = await axios.post(`/api/getdocs`, {
-    //   question: input,
-    //   history: '',
-    //   namespace: namespaceRef.current
-    // })
-    // console.log("docs is : ", docs.data)
+
     let content = "";
-    for (let i = 0; i < PDFList.length; i++) [
-      content += `
-      --------------------------------------
-      Profile Name :  
-      This is profile of ${PDFList[i].metadata.source.toString().slice(0, -4)}
-      Profile Content :
-      ${PDFList[i].pageContent}
-      -------------------------------------- \n
-      `
-    ]
+    // for (let i = 0; i < PDFList.length; i++) [
+    //   content += `
+    //   --------------------------------------
+    //   Profile Name :  
+    //   This is profile of ${PDFList[i].metadata.source.toString().slice(0, -4)}
+    //   Profile Content :
+    //   ${PDFList[i].pageContent}
+    //   -------------------------------------- \n
+    //   `
+    // ]
 
     const DocList = []
     DocList.push({
