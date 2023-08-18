@@ -79,11 +79,15 @@ export function PromptForm({
 
           Promise.all(promises).then(async pages => {
             try {
-              console.log(pages.join('\n'))
               console.log(PDFList)
               const newlist: any = [...PDFList]
               if (event.target.files?.length)
-                newlist.push({ name: event.target.files[0].name, content: pages.join('\n') })
+                newlist.push({
+                  metadata: {
+                    source: event.target.files[0].name
+                  },
+                  pageContent: pages.join('\n')
+                })
               setPDFList(newlist)
 
               // const result = await axios.post('/api/upload', {
@@ -149,9 +153,6 @@ export function PromptForm({
             </Tooltip.Portal>
           </Tooltip.Root>
         </Tooltip.Provider>
-
-
-
         <Textarea
           ref={inputReactRef}
           tabIndex={0}
@@ -164,8 +165,6 @@ export function PromptForm({
           className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
         />
         <div className="absolute top-4 right-4">
-          {/* <Tooltip>
-            <TooltipTrigger asChild> */}
           <Button
             className='bg-white shadow-none'
             type="submit"
@@ -175,9 +174,6 @@ export function PromptForm({
             <IconArrowElbow />
             <span className="sr-only">Send message</span>
           </Button>
-          {/* </TooltipTrigger>
-            <TooltipContent>Send message</TooltipContent>
-          </Tooltip> */}
         </div>
       </div>
     </form>

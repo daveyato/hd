@@ -35,7 +35,7 @@ import {
 import { OpenAIChat } from "langchain/llms/openai";
 import { CallbackManager } from 'langchain/callbacks';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import useHigherAIStore from "@/utils/store"
+import useHigherAIStore from "@/store"
 import { PromptTemplate } from 'langchain/prompts'
 import { QA_PROMPT } from '@/utils/prompt'
 import { Header } from './header'
@@ -48,6 +48,8 @@ export interface ChatProps extends React.ComponentProps<'div'> {
 }
 
 export function Chat({ id, initialMessages, className }: ChatProps) {
+  const { PDFList, setPDFList } = useHigherAIStore()
+
   const [isUploading, setLoading] = useState<boolean>(false)
   const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
     'ai-token',
@@ -100,13 +102,34 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     const sanitizedQuestion = (
       input + " Explain as much as detail you can."
     )
-    const docs = await axios.post(`/api/getdocs`, {
-      question: input,
-      history: '',
-      namespace: namespaceRef.current
-    })
-    console.log("docs is : ", docs.data)
+    // const docs = await axios.post(`/api/getdocs`, {
+    //   question: input,
+    //   history: '',
+    //   namespace: namespaceRef.current
+    // })
+    // console.log("docs is : ", docs.data)
+    let content = "";
+    for (let i = 0; i < PDFList.length; i++) [
+      content += `
+      --------------------------------------
+      Profile Name :  
+      This is profile of ${PDFList[i].metadata.source.toString().slice(0, -4)}
+      Profile Content :
+      ${PDFList[i].pageContent}
+      -------------------------------------- \n
+      `
+    ]
 
+    const DocList = []
+    DocList.push({
+      metadata: {
+        source: "Profile"
+      },
+      pageContent: content
+    })
+    console.log("DocList : ", DocList)
+
+    console.log("PDFList : ", PDFList)
     let data = ""
     setMessages((prevState) => {
       return [...prevState, {
@@ -115,11 +138,10 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       }]
     })
 
-
     const chain = loadQAChain(new OpenAIChat({
       openAIApiKey: "sk-" + process.env.NEXT_PUBLIC_KEY,
       temperature: 0.3,
-      modelName: "gpt-3.5-turbo-0613",
+      modelName: "gpt-3.5-turbo-16k",
       verbose: true,
       streaming: true,
       callbackManager: CallbackManager.fromHandlers({
@@ -134,7 +156,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       prompt: QA_PROMPT
     })
     const res = await chain.call({
-      input_documents: docs.data,
+      input_documents: DocList,
       question: sanitizedQuestion,
     });
     console.log(res)
@@ -181,8 +203,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
               </a>{' '}
               on the OpenAI website. This is only necessary for preview
               environments so that the open source community can test the app.
-              The token will be saved to your browser&apos;s local storage under
-              the name <code className="font-mono">ai-token</code>.
+              The token will be saved to your browser&apos;s local storage under the name <code className="font-mono">ai-token</code>.
             </DialogDescription>
           </DialogHeader>
           <Input

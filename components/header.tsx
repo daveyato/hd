@@ -1,32 +1,10 @@
 import * as React from 'react'
-import Link from 'next/link'
-
-import { cn } from '@/lib/utils'
-import { auth } from '@/auth'
-import { clearChats } from '@/app/actions'
-import { Button, buttonVariants } from '@/components/ui/button'
-import { Sidebar } from '@/components/sidebar'
-import { SidebarList } from '@/components/sidebar-list'
-import {
-  IconGitHub,
-  IconNextChat,
-  IconSeparator,
-  IconVercel
-} from '@/components/ui/icons'
-import { SidebarFooter } from '@/components/sidebar-footer'
-import { ThemeToggle } from '@/components/theme-toggle'
-import { ClearHistory } from '@/components/clear-history'
-import { UserMenu } from '@/components/user-menu'
-import { LoginButton } from '@/components/login-button'
 import Image from "next/image";
 import logo from "../public/assets/icons/logo.png"
 import info from "../public/assets/icons/info.svg"
 import pdfimg from '../public/assets/icons/pdf.svg'
 import closeimg from '../public/assets/icons/close.svg'
 import useHigherAIStore from "@/store"
-
-
-
 
 export const Header = () => {
   // const session = await auth()
@@ -48,7 +26,6 @@ export const Header = () => {
         />
       </div>
       <div className="flex items-center justify-start p-4 space-x-2 lg:w-[800px]  bg-[#EEEFEF] rounded-[8px] h-auto w-full ">
-
         {
           PDFList.length == 0 ?
             <>
@@ -60,27 +37,24 @@ export const Header = () => {
               <p className='text-[#5F6E78] '>No File Uploaded ...</p>
             </>
             :
-            PDFList.map((item: any, idx: any,) => <>
+            PDFList.map((item: any, idx: any,) => <div key={idx} className='flex items-center justify-start'>
               <Image
+
                 className="w-[24px] h-[24px] "
                 src={pdfimg}
                 alt="info"
               />
-              <p className='px-[1px]'>{shortenString(item.name)}</p>
+              <p className='px-2'>{shortenString(item.metadata.source)}</p>
               <Image
                 className="w-[24px] h-[24px] cursor-pointer"
                 src={closeimg}
                 alt="info"
                 onClick={() => onDelete(idx)}
               />
-            </>)
+            </div>)
         }
-
-
-
       </div>
       <div className=" w-[170px] h-[0px] flex items-center justify-end bg-red-500 invisible ">
-
       </div>
     </header>
   )
