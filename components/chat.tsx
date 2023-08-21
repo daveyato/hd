@@ -79,6 +79,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   useEffect(() => {
     if (text == "")
       return
+
     if (messages.length > 1)
       setMessages((prevState) => {
         const newState = [...prevState];
@@ -95,7 +96,12 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     const newMsg = messages[messages.length - 2]
     append(newMsg)
   }
+
   const append = async (msg: Message) => {
+    if (PDFList.length == 0) {
+      alert("Upload Profile Document first")
+      return
+    }
     setIsLoading(true)
     const ctrl = new AbortController()
     setMessages(prevState => [...prevState, msg])
@@ -104,16 +110,16 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     )
 
     let content = "";
-    // for (let i = 0; i < PDFList.length; i++) [
-    //   content += `
-    //   --------------------------------------
-    //   Profile Name :  
-    //   This is profile of ${PDFList[i].metadata.source.toString().slice(0, -4)}
-    //   Profile Content :
-    //   ${PDFList[i].pageContent}
-    //   -------------------------------------- \n
-    //   `
-    // ]
+    for (let i = 0; i < PDFList.length; i++) [
+      content += `
+      --------------------------------------
+      Profile Name :  
+      This is profile of ${PDFList[i].metadata.source.toString().slice(0, -4)}
+      Profile Content :
+      ${PDFList[i].pageContent}
+      -------------------------------------- \n
+      `
+    ]
 
     const DocList = []
     DocList.push({
@@ -158,6 +164,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     setText("")
     setIsLoading(false)
   }
+
   return (
     <>
       <Header />

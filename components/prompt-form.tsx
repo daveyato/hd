@@ -61,6 +61,10 @@ export function PromptForm({
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log('onFileChange called ----------')
+    if (PDFList.length == 4) {
+      alert("You can not upload over 4 documents \n Remove document first")
+      return
+    }
     if (event.target.files?.length) {
       setLoading(true)
 
