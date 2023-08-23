@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { ExternalLink } from '@/components/external-link'
 import { IconArrowRight } from '@/components/ui/icons'
 import processimg from "../public/assets/icons/our-process.png"
+import owlimg from "../public/assets/icons/owl.png"
 import promptimg from "../public/assets/icons/prompt.png"
 import gotoimg from "../public/assets/icons/goto.svg"
 import Image from "next/image";
@@ -28,9 +29,17 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
   return (
     <div className="mx-auto sm:max-w-[800px] px-4">
       <div className="">
-        <h1 className="mb-2 text-3xl font-semibold">
-          Welcome to The Gene Keys AI Owl
-        </h1>
+        <div className="flex text-center items-center justify-center">
+          <h1 className="mb-2 text-3xl font-semibold">
+            Welcome to The Gene Keys AI Owl
+          </h1>
+          <Image
+            className="w-[50px] h-[50px] ml-2 "
+            src={owlimg}
+            alt="info"
+          />
+        </div>
+
         <p className="mb-2 leading-normal text-muted-foreground text-lg">
           Introducing the Gene Keys AI Owl—your intuitive guide to self-exploration, relationships, and life&apos;s purpose. Dive into personal insights, discover compatibility with others, or simply unlock the mysteries of your unique genetic code. With the Gene Keys AI Owl, understanding yourself and forging meaningful connections has never been more enlightening. Embark on a journey of discovery in just a few simple steps.
         </p>
