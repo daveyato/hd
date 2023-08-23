@@ -25,7 +25,7 @@ const exampleMessages = [
   }
 ]
 
-export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
+export function EmptyScreen({ append }: any) {
   return (
     <div className="mx-auto sm:max-w-[800px] px-4">
       <div className="">
@@ -94,6 +94,10 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
                   className="w-[28px] h-[28px] mr-2 cursor-pointer "
                   src={gotoimg}
                   alt="info"
+                  onClick={() => append({
+                    content: "What Insights Do My Traits Unlock About My True Self?",
+                    role: "user"
+                  })}
                 />
               </div>
               <div className='text-muted-foreground '>
@@ -107,6 +111,10 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
                   className="w-[28px] h-[28px] mr-2 cursor-pointer"
                   src={gotoimg}
                   alt="info"
+                  onClick={() => append({
+                    content: "How Can I Navigate Towards Greater Clarity and Purpose in My Life?",
+                    role: "user"
+                  })}
                 />
               </div>
               <div className='text-muted-foreground '>
@@ -120,6 +128,10 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
                   className="w-[28px] h-[28px] mr-2 cursor-pointer"
                   src={gotoimg}
                   alt="info"
+                  onClick={() => append({
+                    content: "What Insights Can Our Profiles Offer to Enhance Our Relationship or Business Partnership?",
+                    role: "user"
+                  })}
                 />
               </div>
               <div className='text-muted-foreground '>

@@ -49,7 +49,6 @@ export interface ChatProps extends React.ComponentProps<'div'> {
 
 export function Chat({ id, initialMessages, className }: ChatProps) {
   const { PDFList, setPDFList } = useHigherAIStore()
-
   const [isUploading, setLoading] = useState<boolean>(false)
   const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
     'ai-token',
@@ -176,7 +175,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             <ChatScrollAnchor trackVisibility={isLoading} />
           </>
         ) : (
-          <EmptyScreen setInput={setInput} />
+          <EmptyScreen setInput={setInput} append={append} />
         )}
       </div>
       <ChatPanel
