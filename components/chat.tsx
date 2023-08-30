@@ -173,7 +173,6 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       stopnum.current = stopnum.current + 1;
       setText(res.text)
       setIsLoading(false)
-
     }
 
   }
