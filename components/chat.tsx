@@ -57,9 +57,11 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   const [previewTokenDialog, setPreviewTokenDialog] = useState(IS_PREVIEW)
   const [text, setText] = useState<string>("asdfasdfs")
 
-  const [stop, setStop] = useState(false)
   const [previewTokenInput, setPreviewTokenInput] = useState(previewToken ?? '')
   const namespaceRef = useRef<any>(null)
+  const msgnum = useRef<any>(0)
+  const stopnum = useRef<any>(0)
+
   const respRef = useRef<string>("")
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -138,7 +140,10 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       }]
     })
 
-    const chain = loadQAChain(new OpenAIChat({
+    msgnum.current = msgnum.current + 1
+    const refnum = msgnum.current
+
+    let chain = loadQAChain(new OpenAIChat({
       openAIApiKey: "sk-" + process.env.NEXT_PUBLIC_KEY,
       temperature: 0.3,
       modelName: "gpt-3.5-turbo-16k",
@@ -148,7 +153,10 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         async handleLLMNewToken(token) {
           data += token;
           console.log(token)
-          setText(data)
+          console.log("refnum : ", refnum)
+          console.log("stopnum : ", stopnum)
+          if (refnum == stopnum.current + 1)
+            setText(data)
         },
       }),
     }), {
@@ -160,8 +168,20 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       question: sanitizedQuestion,
     });
     console.log(res)
-    setText("")
+
+    if (refnum == stopnum.current + 1) {
+      stopnum.current = stopnum.current + 1;
+      setText(res.text)
+      setIsLoading(false)
+
+    }
+
+  }
+
+  const stop = () => {
+    stopnum.current = stopnum.current + 1;
     setIsLoading(false)
+    setText("")
   }
 
   return (
