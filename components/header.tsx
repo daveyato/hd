@@ -10,7 +10,7 @@ export const Header = () => {
   // const session = await auth()
   const { PDFList, setPDFList } = useHigherAIStore()
   const shortenString = (inputString: string): string =>
-    inputString.length > 12 ? `${inputString.substring(0, 9)}...` : inputString;
+    inputString.length > 9 ? `${inputString.substring(0, 6)}..` : inputString;
   const onDelete = (idx: any) => {
     const newlist: any = [...PDFList]
     newlist.pop(idx);
@@ -25,7 +25,7 @@ export const Header = () => {
           alt="Logo"
         />
       </div>
-      <div className="flex items-center justify-start p-4 space-x-2 lg:w-[800px]  bg-[#EEEFEF] rounded-[8px] h-auto w-full ">
+      <div className="flex items-center justify-start p-4 space-x-2 lg:w-[800px]  bg-[#EEEFEF] rounded-[8px] h-auto w-full overflow-x-auto">
         {
           PDFList.length == 0 ?
             <>

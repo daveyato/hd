@@ -11,6 +11,7 @@ import * as Tooltip from '@radix-ui/react-tooltip'
 import { IconArrowElbow, IconPlus } from '@/components/ui/icons'
 import { getDocument, GlobalWorkerOptions, PDFDocumentProxy } from 'pdfjs-dist'
 import { generateRandomString } from './utils'
+import { MAX_FILE__NUM } from '@/utils/constants'
 
 GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.js`
 
@@ -61,8 +62,8 @@ export function PromptForm({
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log('onFileChange called ----------')
-    if (PDFList.length == 4) {
-      alert("You can not upload over 4 documents \n Remove document first")
+    if (PDFList.length == MAX_FILE__NUM) {
+      alert(`You can not upload over ${MAX_FILE__NUM} documents \n Remove document first`)
       return
     }
     if (event.target.files?.length) {
@@ -151,7 +152,7 @@ export function PromptForm({
             </Tooltip.Trigger>
             <Tooltip.Portal>
               <Tooltip.Content className="TooltipContent" sideOffset={5}>
-                Upload 1-4 PDF files
+                {`Upload 1-${MAX_FILE__NUM} PDF files`}
                 <Tooltip.Arrow className="TooltipArrow" />
               </Tooltip.Content>
             </Tooltip.Portal>
