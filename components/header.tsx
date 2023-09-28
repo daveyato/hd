@@ -54,7 +54,7 @@ export const Header = () => {
             </div>)
         }
       </div>
-      <div className=" w-[41px] h-[0px] flex items-center justify-end bg-red-500 invisible ">
+      <div className=" w-[50px] h-[0px] flex items-center justify-end bg-red-500 invisible ">
       </div>
     </header>
   )
