@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Image from "next/image";
-import logo from "../public/assets/icons/logo.png"
+import logo from "../public/assets/icons/logo.svg"
 import info from "../public/assets/icons/info.svg"
 import pdfimg from '../public/assets/icons/pdf.svg'
 import closeimg from '../public/assets/icons/close.svg'
@@ -20,7 +20,7 @@ export const Header = () => {
     <header className="sticky top-0 z-50 flex flex-col lg:flex-row items-center justify-center lg:gap-4 gap-0 w-full  h-auto lg:px-4 lg:py-4 pb-[0px] border-b shrink-0 bg-white lg:bg-gradient-to-b from-background/10 via-background/50 to-background/80 backdrop-blur-xl">
       <div className="flex items-center justify-end bg-white p-2">
         <Image
-          className="w-[170px] h-[41px] "
+          className="w-[50px] h-[50px] "
           src={logo}
           alt="Logo"
         />
@@ -54,7 +54,7 @@ export const Header = () => {
             </div>)
         }
       </div>
-      <div className=" w-[170px] h-[0px] flex items-center justify-end bg-red-500 invisible ">
+      <div className=" w-[41px] h-[0px] flex items-center justify-end bg-red-500 invisible ">
       </div>
     </header>
   )
