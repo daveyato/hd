@@ -8,7 +8,7 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
   return (
     <div>
       <h3 className="mb-2 font-semibold">Discover More with Gene Keys</h3>
-      <p className='text-left text-xs leading-normal text-muted-foreground'>Interested in exploring your unique genetic code? The Gene Keys & their courses offer an in-depth look into your personal traits, potentials, and life&apos;s purpose.<span style={{ color: "#885EA3" }}>Create a free profile and start your journey of self-discovery.</span></p>
+      <p className='text-left text-xs leading-normal text-muted-foreground'>Curious to delve into your distinctive genetic blueprint? The Human Design System and its comprehensive courses provide a gateway to uncovering your individual traits, latent capacities, and life&apos;s mission. Establish a complimentary profile and embark on your voyage of self-realization. </p>
     </div>
   )
 }
