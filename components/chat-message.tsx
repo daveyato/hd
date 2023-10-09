@@ -8,7 +8,7 @@ import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconOpenAI, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from '@/components/chat-message-actions'
 import Image from "next/image";
-import aiimg from "../public/assets/icons/ai.png"
+import aiimg from "../public/assets/icons/ai.svg"
 import userimg from "../public/assets/icons/user.svg"
 
 
