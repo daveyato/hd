@@ -146,7 +146,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     let chain = loadQAChain(new OpenAIChat({
       openAIApiKey: "sk-" + process.env.NEXT_PUBLIC_KEY,
       temperature: 0.3,
-      modelName: "gpt-4-32k",
+      modelName: "gpt-4",
       verbose: true,
       streaming: true,
       callbackManager: CallbackManager.fromHandlers({
